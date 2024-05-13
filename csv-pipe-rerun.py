@@ -14,7 +14,8 @@ def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-s', '--spawn', action='store_true')
     parser.add_argument('--addr', default='127.0.0.1:9876')
-    parser.add_argument('-t', '--title', default='no_name')
+    parser.add_argument('-a', '--app-title', default='no_app_name')
+    parser.add_argument('-t', '--title', default='no_graph_name')
     parser.add_argument('-c', '--color-seed', default=0)
     parser.add_argument('--interval', type=float, default=0.0)
     parser.add_argument(
@@ -26,6 +27,7 @@ def main():
     parser.add_argument('args', nargs='*')
 
     args, extra_args = parser.parse_known_args()
+    app_title = args.app_title
     title = args.title
     seed = args.color_seed
     input_filepath = args.input_filepath
@@ -38,7 +40,7 @@ def main():
         header = next(reader)
         print('header:', header)
 
-        rr.init("rerun_example", spawn=spawn)
+        rr.init("{}".format(app_title), spawn=spawn)
         if not spawn:
             rr.connect(addr=addr)
 

@@ -17,6 +17,8 @@ def main():
     parser.add_argument('-a', '--app-title', default='no_app_name')
     parser.add_argument('-t', '--title', default='no_graph_name')
     parser.add_argument('-c', '--color-seed', default=0)
+    parser.add_argument('--recording_id', default=None)
+    parser.add_argument('--marker_size', default=2)
     parser.add_argument('--interval', type=float, default=0.0)
     parser.add_argument(
         '-i',
@@ -27,20 +29,26 @@ def main():
     parser.add_argument('args', nargs='*')
 
     args, extra_args = parser.parse_known_args()
+    spawn = args.spawn
+    addr = args.addr
     app_title = args.app_title
     title = args.title
     seed = args.color_seed
-    input_filepath = args.input_filepath
-    spawn = args.spawn
-    addr = args.addr
+    marker_size = args.marker_size
+    recording_id = args.recording_id
     interval = args.interval
+    input_filepath = args.input_filepath
+
     np.random.seed(seed=seed)
     with input_filepath as f:
         reader = csv.reader(f)
         header = next(reader)
         print('header:', header)
 
-        rr.init("{}".format(app_title), spawn=spawn)
+        rr.init(
+            "{}".format(app_title),
+            recording_id=recording_id,
+            spawn=spawn)
         if not spawn:
             rr.connect(addr=addr)
 
@@ -61,7 +69,7 @@ def main():
                     color=color,
                     name="{}".format(column_name),
                     marker="circle",
-                    marker_size=4,
+                    marker_size=marker_size,
                 ),
                 timeless=True,
             )

@@ -36,6 +36,50 @@ def generate_dummy_data():
 rr.init("PLY Point Cloud Viewer", spawn=True)
 
 
+def create_viewcone(label, origin, quat, color):
+    lines = [
+        [
+            [-0.5, -0.5, 0],
+            [0.5, -0.5, 0],
+            [0.5, 0.5, 0],
+            [-0.5, 0.5, 0],
+            [-0.5, -0.5, 0],
+        ],
+        [
+            [-0.5, -0.5, 0],
+            [0.0, 0.0, 1.44 / 2],
+        ],
+        [
+            [0.5, -0.5, 0],
+            [0.0, 0.0, 1.44 / 2],
+        ],
+        [
+            [-0.5, 0.5, 0],
+            [0.0, 0.0, 1.44 / 2],
+        ],
+        [
+            [0.5, 0.5, 0],
+            [0.0, 0.0, 1.44 / 2],
+        ],
+    ]
+    rr.log(
+        label,
+        rr.LineStrips3D(
+            lines,
+            colors=[color] * len(lines),
+            radii=[[0.025]] * len(lines),
+            # labels=["one strip here", "and one strip there"],
+        )
+    )
+    rr.log(
+        label,
+        rr.Transform3D(
+            translation=origin,
+            mat3x3=quaternion.as_rotation_matrix(quat)
+        )
+    )
+
+
 def load_and_log_ply(file_path):
     point_cloud = trimesh.load(file_path)
 
@@ -48,6 +92,14 @@ def load_and_log_ply(file_path):
         colors = np.ones((positions.shape[0], 3)) * 255
 
     radii = np.full(positions.shape[0], 0.01)
+
+    for i in range(0, 10):
+        origin = [i * 0.1, i * 0.2, 1]
+        angle = math.radians(i * 20)
+        q = quaternion.from_euler_angles([0, -angle, 0])
+        label = 'viewcone/{}'.format(i)
+        color = [255, 0, 0]
+        create_viewcone(label, origin, q, color)
 
     rr.log(
         "PLY Point Cloud",

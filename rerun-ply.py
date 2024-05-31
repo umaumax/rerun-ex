@@ -23,6 +23,23 @@ def count_setdiff2d_set(src, dst):
     return (len(deleted_set), len(added_set))
 
 
+def setdiff2d_set_numpy(src, dst):
+    nrows, ncols = dst.shape
+    dtype = {'names': ['f{}'.format(i) for i in range(ncols)],
+             'formats': ncols * [dst.dtype]}
+    src_view = src.view(dtype)
+    dst_view = dst.view(dtype)
+
+    deleted_set = np.setdiff1d(src_view, dst_view)
+    added_set = np.setdiff1d(dst_view, src_view)
+    return deleted_set, added_set
+
+
+def count_setdiff2d_set_numpy(src, dst):
+    deleted_set, added_set = setdiff2d_set_numpy(src, dst)
+    return (len(deleted_set), len(added_set))
+
+
 def load_plyfile(filepath):
     point_cloud = trimesh.load(filepath)
     return point_cloud
@@ -58,20 +75,8 @@ class RerunPlySender:
         if False:
             start = time.perf_counter()
             if True:
-                if len(self.pre_positions) == 0:
-                    self.pre_positions = np.array([[np.nan, np.nan, np.nan]])
-                nrows, ncols = self.pre_positions.shape
-                dtype = {'names': ['f{}'.format(i) for i in range(ncols)],
-                         'formats': ncols * [self.pre_positions.dtype]}
-
-                deleted_points = len(
-                    np.setdiff1d(
-                        self.pre_positions.view(dtype),
-                        positions.view(dtype)))
-                added_points = len(
-                    np.setdiff1d(
-                        positions.view(dtype),
-                        self.pre_positions.view(dtype)))
+                deleted_points, added_points = count_setdiff2d_set_numpy(
+                    self.pre_positions, positions)
             else:
                 deleted_points, added_points = count_setdiff2d_set(
                     self.pre_positions, positions)

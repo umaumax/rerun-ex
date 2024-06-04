@@ -4,7 +4,8 @@
 ``` bash
 pip3 install rerun-sdk
 
-pip3 install numpy
+pip3 install trimesth
+pip3 install numpy numpy-quaternion
 ```
 
 ## how to run

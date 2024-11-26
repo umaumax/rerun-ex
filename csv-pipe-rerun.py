@@ -19,7 +19,7 @@ def main():
     parser.add_argument('-c', '--color-seed', default=0)
     parser.add_argument('--recording_id', default=None)
     parser.add_argument('--marker_size', default=2)
-    parser.add_argument('--interval', type=float, default=0.0)
+    parser.add_argument('--interval', type=float, default=0.1)
     parser.add_argument(
         '-i',
         '--input-filepath',

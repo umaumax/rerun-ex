@@ -74,10 +74,11 @@ def main():
                 timeless=True,
             )
 
-        for t, row in enumerate(reader):
-            rr.set_time_sequence("step", int(row[0]))
+        for _, row in enumerate(reader):
+            step = int(row[0])
+            rr.set_time_sequence("step", step)
             for i, column_name in enumerate(header[1:], 1):
-                print('{}[{}]={}'.format(column_name, t, row[i]))
+                print('{}[{}]={}'.format(column_name, step, row[i]))
                 rr.log("{}/{}".format(title, column_name), rr.Scalar(row[i]))
             time.sleep(interval)
 

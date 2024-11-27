@@ -136,12 +136,15 @@ async def rerun_app(container):
             await asyncio.sleep(0.5)
     tasks.append(asyncio.create_task(check_rerun_process_status()))
 
-    head_placeholder = inner_container.empty()
-    while True:
-        head_placeholder.empty()
-        with head_placeholder.container():
-            pass
-        await asyncio.sleep(1.0)
+    async def main_loop():
+        head_placeholder = inner_container.empty()
+        while True:
+            head_placeholder.empty()
+            with head_placeholder.container():
+                pass
+            await asyncio.sleep(1.0)
+
+    tasks.append(asyncio.create_task(main_loop()))
     await asyncio.gather(*tasks)
 
 

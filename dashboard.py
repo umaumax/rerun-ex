@@ -59,11 +59,11 @@ async def rerun_app(container):
                   pkill -P $$
                   exit $exit_code
                 }}
-                trap cleanup SIGINT SIGTERM
+                trap cleanup INT TERM
                 {main_script}
                 BACKGROUND_PID=$!
                 wait $BACKGROUND_PID
-                trap - SIGINT SIGTERM
+                trap - INT TERM
                 '''
             command1 = generate_shell_script(f'''
             python3 -c $'import psutil; import time;\nprint("id,",",".join(map(str,range(psutil.cpu_count(logical=False)))));\ni=0\nwhile True: print(i,",",",".join(map(str,psutil.cpu_percent(percpu=True))), flush=True); time.sleep(0.1); i+=1' \
